@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ตู้เอกสารอัจฉริยะ | Smart Document Cabinet</title>
+    <style>
+        :root {
+            --navy: #12334a;
+            --blue: #2563eb;
+            --teal: #0f766e;
+            --ink: #203447;
+            --muted: #64748b;
+            --bg: #f2f6fa;
+            --line: #dce5ed;
+            --green: #15803d
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif
+        }
+
+        button,
+        input,
+        select {
+            font: inherit
+        }
+
+        button {
+            cursor: pointer;
+            border: 0;
+            border-radius: 10px;
+            padding: 11px 14px;
+            font-weight: 700
+        }
+
+        button:disabled {
+            opacity: .45;
+            cursor: not-allowed
+        }
+
+        .top {
+            background: linear-gradient(120deg, #12334a, #17617a);
+            color: #fff;
+            padding: 22px 18px
+        }
+
+        .topin {
+            max-width: 1160px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .logo {
+            font-size: 28px;
+            background: #ffffff20;
+            border: 1px solid #ffffff30;
+            border-radius: 13px;
+            padding: 9px
+        }
+
+        .top h1 {
+            margin: 0;
+            font-size: clamp(22px, 3vw, 30px)
+        }
+
+        .top p {
+            margin: 4px 0 0;
+            color: #d6e9f2
+        }
+
+        .demo {
+            font-size: 12px;
+            border: 1px solid #ffffff50;
+            background: #ffffff18;
+            padding: 8px 12px;
+            border-radius: 99px;
+            white-space: nowrap
+        }
+
+        .wrap {
+            max-width: 1160px;
+            margin: auto;
+            padding: 18px
+        }
+
+        .nav {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px
+        }
+
+        .nav button {
+            background: white;
+            border: 1px solid var(--line);
+            color: var(--navy)
+        }
+
+        .nav button.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue)
+        }
+
+        .page {
+            display: none
+        }
+
+        .page.active {
+            display: block
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 19px;
+            box-shadow: 0 4px 14px #18364b08;
+            margin-bottom: 16px
+        }
+
+        .card h2 {
+            font-size: 20px;
+            margin: 0 0 6px
+        }
+
+        .sub {
+            font-size: 14px;
+            color: var(--muted);
+            line-height: 1.55;
+            margin: 0 0 15px
+        }
+
+        label {
+            display: block;
+            font-weight: 700;
+            font-size: 14px;
+            margin: 12px 0 6px
+        }
+
+        input,
+        select {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 11px;
+            background: white;
+            color: var(--ink)
+        }
+
+        input:focus,
+        select:focus {
+            outline: 3px solid #bfdbfe;
+            border-color: var(--blue)
+        }
+
+        .primary {
+            background: var(--blue);
+            color: white
+        }
+
+        .secondary {
+            background: #eaf0f6;
+            color: var(--navy)
+        }
+
+        .success {
+            background: var(--green);
+            color: white
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px
+        }
+
+        .hint {
+            font-size: 12px;
+            line-height: 1.5;
+            color: var(--muted);
+            margin-top: 8px
+        }
+
+        .status {
+            padding: 11px 12px;
+            border-radius: 10px;
+            background: #eff6ff;
+            color: #1d4ed8;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-top: 12px
+        }
+
+        .status.ok {
+            background: #ecfdf5;
+            color: #166534
+        }
+
+        .status.warn {
+            background: #fff7ed;
+            color: #9a3412
+        }
+
+        .status.err {
+            background: #fef2f2;
+            color: #991b1b
+        }
+
+        .kiosk {
+            background: #eaf0f5;
+            border: 1px solid #cbd5e1;
+            border-radius: 15px;
+            padding: 12px
+        }
+
+        .screen {
+            background: white;
+            border: 5px solid #28465b;
+            border-radius: 12px;
+            padding: 15px;
+            min-height: 125px
+        }
+
+        .screenhead {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            border-bottom: 1px solid var(--line);
+            padding-bottom: 9px;
+            margin-bottom: 10px
+        }
+
+        .cabinet {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 7px;
+            margin-top: 12px
+        }
+
+        .slot {
+            border: 2px solid #9aaaba;
+            background: #dce5ec;
+            border-radius: 8px;
+            padding: 14px 3px;
+            text-align: center;
+            font-weight: 800;
+            position: relative
+        }
+
+        .slot.lit {
+            background: #fef08a;
+            border-color: #eab308;
+            box-shadow: 0 0 15px #facc1580
+        }
+
+        .slot.open {
+            background: #dcfce7;
+            border-color: #16a34a
+        }
+
+        .slot.open:after {
+            content: "เปิด";
+            position: absolute;
+            top: -8px;
+            right: -3px;
+            font-size: 10px;
+            background: #15803d;
+            color: white;
+            padding: 2px 5px;
+            border-radius: 5px
+        }
+
+        .result {
+            border: 1px solid #99f6e4;
+            background: #f0fdfa;
+            border-radius: 12px;
+            padding: 13px;
+            margin-top: 13px
+        }
+
+        .result h3 {
+            margin: 0 0 6px;
+            color: #115e59
+        }
+
+        .empty {
+            padding: 20px;
+            text-align: center;
+            color: var(--muted);
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            border-radius: 12px;
+            margin-top: 12px
+        }
+
+        .tag {
+            display: inline-block;
+            border-radius: 99px;
+            background: #e0f2fe;
+            color: #075985;
+            padding: 4px 8px;
+            font-size: 12px;
+            font-weight: 700
+        }
+
+        .intake-layout {
+            display: grid;
+            grid-template-columns: .95fr 1.05fr;
+            gap: 16px
+        }
+
+        .cabinet-illustration {
+            background: linear-gradient(145deg, #edf3f7, #dce6ed);
+            border: 1px solid #c5d3df;
+            border-radius: 17px;
+            padding: 16px
+        }
+
+        .cabinet-body {
+            max-width: 390px;
+            margin: auto;
+            background: #a9bbc9;
+            border: 5px solid #6d8495;
+            border-radius: 13px;
+            padding: 12px;
+            box-shadow: 0 7px 0 #8fa4b4
+        }
+
+        .cabinet-label {
+            text-align: center;
+            font-weight: 800;
+            color: #244256;
+            margin-bottom: 10px
+        }
+
+        .intake-slot {
+            height: 56px;
+            background: #172d3b;
+            border: 4px solid #6e8290;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #d9f2ff;
+            font-size: 13px;
+            letter-spacing: .5px;
+            box-shadow: inset 0 3px 9px #0008
+        }
+
+        .slot-caption {
+            text-align: center;
+            font-size: 12px;
+            color: #244256;
+            margin: 6px 0 14px
+        }
+
+        .cabdoors {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px
+        }
+
+        .cabdoor {
+            height: 72px;
+            border: 3px solid #718796;
+            border-radius: 7px;
+            background: linear-gradient(135deg, #cbd7df, #9fb1bf);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            font-weight: 800;
+            color: #28465b
+        }
+
+        .led {
+            width: 9px;
+            height: 9px;
+            background: #657b88;
+            border-radius: 50%;
+            display: inline-block
+        }
+
+        .led.on {
+            background: #facc15;
+            box-shadow: 0 0 12px #facc15
+        }
+
+        .paper-stack {
+            font-size: 36px;
+            text-align: center;
+            margin: 4px 0 8px
+        }
+
+        .scan-area {
+            border: 2px dashed #9aafbd;
+            border-radius: 14px;
+            background: #f8fbfd;
+            padding: 16px;
+            text-align: center
+        }
+
+        .scan-icon {
+            font-size: 38px
+        }
+
+        .progress {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 99px;
+            overflow: hidden;
+            margin-top: 10px
+        }
+
+        .progress span {
+            display: block;
+            width: 0;
+            height: 100%;
+            background: var(--teal);
+            transition: width .25s
+        }
+
+        .scan-preview {
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 14px;
+            text-align: left;
+            margin-top: 12px
+        }
+
+        .scan-line {
+            height: 7px;
+            border-radius: 6px;
+            background: #d9e2e9;
+            margin: 9px 0
+        }
+
+        .scan-line.short {
+            width: 60%
+        }
+
+        .table-wrap {
+            overflow: auto;
+            margin-top: 12px
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            min-width: 560px
+        }
+
+        .table th,
+        .table td {
+            text-align: left;
+            padding: 11px 9px;
+            border-bottom: 1px solid var(--line)
+        }
+
+        .table th {
+            background: #f8fafc;
+            color: #526579
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 9px
+        }
+
+        .step {
+            text-align: center;
+            padding: 12px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: #f8fafc;
+            font-size: 13px
+        }
+
+        .step b {
+            display: block;
+            color: var(--navy);
+            margin-bottom: 5px
+        }
+
+        footer {
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+            padding: 10px
+        }
+
+        @media(max-width:800px) {
+
+            .layout,
+            .intake-layout {
+                grid-template-columns: 1fr
+            }
+
+            .topin {
+                align-items: flex-start;
+                flex-direction: column
+            }
+
+            .steps {
+                grid-template-columns: repeat(2, 1fr)
+            }
+
+            .wrap {
+                padding: 12px
+            }
+
+            .card {
+                padding: 15px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="top">
+        <div class="topin">
+            <div class="brand">
+                <div class="logo">▤</div>
+                <div>
+                    <h1>ตู้เอกสารอัจฉริยะ</h1>
+                    <p>Smart Document Cabinet · UI Prototype สำหรับสาธิตการใช้งาน</p>
+                </div>
+            </div>
+            <div class="demo">PROTOTYPE · ระบบจำลอง</div>
+        </div>
+    </header>
+    <main class="wrap">
+        <nav class="nav"><button class="active" data-page="searchPage">⌕ ค้นหาเอกสาร</button><button
+                data-page="intakePage">＋ นำเอกสารเข้าตู้</button><button data-page="recordsPage">▤
+                ทะเบียนเอกสาร</button></nav>
+        <section id="searchPage" class="page active">
+            <div class="layout">
+                <div class="card">
+                    <h2>ค้นหาเอกสาร</h2>
+                    <p class="sub">พูดหรือพิมพ์ชื่อเอกสาร ระบบจะค้นทะเบียนและแจ้งตำแหน่งช่องเก็บ</p><label
+                        for="query">ชื่อเอกสาร / คำค้นหา</label><input id="query" value="แบบประเมินพัฒนาการเด็ก ปี 2568"
+                        placeholder="เช่น แบบประเมินพัฒนาการเด็ก ปี 2568">
+                    <div class="row"><button class="primary" id="voiceBtn">🎙 เริ่มพูดค้นหา</button><button
+                            class="secondary" id="searchBtn">ค้นหา</button></div>
+                    <div id="voiceNote" class="status">หากใช้เสียง ให้กดอนุญาตไมโครโฟนเมื่อเบราว์เซอร์ถาม</div>
+                    <div id="result"></div>
+                </div>
+                <div class="card">
+                    <h2>ตำแหน่งจัดเก็บ</h2>
+                    <p class="sub">เมื่อพบเอกสาร ระบบจะเปิดไฟที่ช่องจัดเก็บจำลอง</p>
+                    <div class="kiosk">
+                        <div class="screen">
+                            <div class="screenhead"><b>หน้าจอตู้เอกสาร</b><span class="tag">พร้อมใช้งาน</span></div>
+                            <div id="kioskMessage">กรุณาค้นหาเอกสาร</div><small>ช่องเก็บเอกสาร · A1–A4 / B1–B4</small>
+                        </div>
+                        <div id="cabinet" class="cabinet"></div>
+                    </div>
+                    <div id="slotStatus" class="status">ยังไม่ได้ระบุตำแหน่งเอกสาร</div>
+                    <div class="row"><button id="openBtn" class="success" disabled>เปิดช่อง (จำลอง)</button><button
+                            id="closeBtn" class="secondary">ปิดช่อง</button></div>
+                </div>
+            </div>
+        </section>
+        <section id="intakePage" class="page">
+            <div class="card">
+                <h2>นำเอกสารเข้าตู้</h2>
+                <p class="sub">แนวคิดการใช้งาน: ครูใส่เอกสารผ่านช่องรับเดียว กล้องภายในตู้จะสแกนเอกสาร
+                    ระบบอ่านข้อมูลและให้ครูตรวจสอบก่อนบันทึก</p>
+                <div class="intake-layout">
+                    <div>
+                        <div class="cabinet-illustration">
+                            <div class="cabinet-body">
+                                <div class="cabinet-label">SMART DOCUMENT CABINET</div>
+                                <div class="intake-slot">ช่องรับเอกสาร · DOCUMENT IN</div>
+                                <div class="slot-caption">ใส่เอกสารทีละชุด</div>
+                                <div class="cabdoors">
+                                    <div class="cabdoor"><span class="led" id="ledA"></span>ช่อง A</div>
+                                    <div class="cabdoor"><span class="led"></span>ช่อง B</div>
+                                </div>
+                            </div>
+                            <div class="paper-stack">📄</div>
+                            <div style="text-align:center;font-size:13px;color:#526579">กล้องสแกนอยู่ภายในช่องรับเอกสาร
+                            </div>
+                        </div>
+                        <div class="status warn">ภาพนี้เป็นภาพจำลองแนวคิดของช่องรับเอกสาร ไม่ใช่กล้องจริงที่ติดตั้งในตู้
+                        </div>
+                    </div>
+                    <div>
+                        <div class="scan-area">
+                            <div class="scan-icon">📷</div>
+                            <h3 style="margin:7px 0">ระบบสแกนเอกสาร</h3>
+                            <p id="scanMessage" class="sub" style="margin-bottom:10px">
+                                กดปุ่มด้านล่างเพื่อจำลองการใส่เอกสารและสแกน</p>
+                            <div class="progress"><span id="progressBar"></span></div>
+                            <div class="row" style="justify-content:center"><button id="scanBtn"
+                                    class="primary">ใส่เอกสารและเริ่มสแกน</button></div>
+                        </div>
+                        <div id="scanPreview" class="scan-preview" style="display:none"><b>ผลการอ่านข้อมูล (จำลอง)</b>
+                            <div class="scan-line"></div>
+                            <div class="scan-line short"></div>
+                            <div class="scan-line"></div>
+                            <div class="hint">ระบบอ่านข้อมูลตัวอย่างเสร็จแล้ว กรุณาตรวจสอบข้อมูลด้านล่าง</div>
+                        </div>
+                        <label for="docName">ชื่อเอกสาร</label><input id="docName" value=""
+                            placeholder="เช่น แบบประเมินพัฒนาการเด็ก">
+                        <label for="docYear">ปี พ.ศ.</label><input id="docYear" value="2568">
+                        <label for="docCategory">ประเภทเอกสาร</label><select id="docCategory">
+                            <option>แบบประเมิน</option>
+                            <option>รายงาน</option>
+                            <option>ทะเบียนข้อมูลเด็ก</option>
+                            <option>เอกสารทั่วไป</option>
+                        </select>
+                        <label for="docLocation">ตำแหน่งจัดเก็บเอกสารฉบับจริง</label><select id="docLocation">
+                            <option>A1</option>
+                            <option>A2</option>
+                            <option>A3</option>
+                            <option>A4</option>
+                            <option>B1</option>
+                            <option>B2</option>
+                            <option>B3</option>
+                            <option>B4</option>
+                        </select>
+                        <div class="row"><button id="saveBtn" class="success" disabled>ตรวจสอบและบันทึกข้อมูล</button>
+                        </div>
+                        <div id="saveStatus" class="status">เริ่มสแกนก่อน แล้วตรวจสอบข้อมูลและบันทึก</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="recordsPage" class="page">
+            <div class="card">
+                <div class="row" style="justify-content:space-between;margin-top:0">
+                    <div>
+                        <h2>ทะเบียนเอกสาร</h2>
+                        <p class="sub" style="margin:5px 0 0">เอกสารตัวอย่างและเอกสารที่เพิ่มในระหว่างสาธิต</p>
+                    </div><button id="resetBtn" class="secondary">คืนค่าข้อมูลตัวอย่าง</button>
+                </div>
+                <div class="table-wrap">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ชื่อเอกสาร</th>
+                                <th>ปี</th>
+                                <th>ประเภท</th>
+                                <th>ตำแหน่ง</th>
+                                <th>สถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="records"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        <footer>ต้นแบบ UI สำหรับนำเสนอ · การสแกนและการเปิดช่องเป็นการจำลอง · ยังไม่เชื่อมต่อกล้อง OCR หรือกลไกตู้จริง
+        </footer>
+    </main>
+    <script>
+        const seed = [
+            { name: "แบบประเมินพัฒนาการเด็ก", year: "2568", category: "แบบประเมิน", location: "A3", status: "จัดเก็บแล้ว" },
+            { name: "รายงานสรุปพัฒนาการเด็ก", year: "2567", category: "รายงาน", location: "B2", status: "จัดเก็บแล้ว" },
+            { name: "ทะเบียนข้อมูลเด็ก", year: "2568", category: "ทะเบียนข้อมูลเด็ก", location: "A1", status: "จัดเก็บแล้ว" },
+            { name: "แผนการจัดประสบการณ์", year: "2568", category: "เอกสารทั่วไป", location: "B4", status: "จัดเก็บแล้ว" }];
+        let records = seed.map(x => ({ ...x })), selected = null, scanReady = false, recognition = null;
+        const $ = id => document.getElementById(id);
+        const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+        document.querySelectorAll("[data-page]").forEach(b => b.addEventListener("click", () => { document.querySelectorAll("[data-page]").forEach(x => x.classList.toggle("active", x === b)); document.querySelectorAll(".page").forEach(x => x.classList.toggle("active", x.id === b.dataset.page)); }));
+        function renderCabinet() { const opened = document.body.dataset.open === "yes"; $("cabinet").innerHTML = ["A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4"].map(s => `<div class="slot ${selected && selected.location === s ? "lit" : ""} ${opened && selected && selected.location === s ? "open" : ""}">${s}</div>`).join(""); }
+        function renderRecords() { $("records").innerHTML = records.map(r => `<tr><td><b>${esc(r.name)}</b></td><td>${esc(r.year)}</td><td>${esc(r.category)}</td><td><span class="tag">${esc(r.location)}</span></td><td>${esc(r.status)}</td></tr>`).join(""); }
+        function doSearch() { const q = $("query").value.trim().toLowerCase(); if (!q) { $("result").innerHTML = '<div class="status warn">กรุณาระบุชื่อเอกสาร</div>'; return; } const words = q.split(/\s+/).filter(w => w.length > 1); selected = records.find(r => { const all = (r.name + " " + r.year + " " + r.category + " " + r.location).toLowerCase(); return all.includes(q) || words.every(w => all.includes(w)); }) || null; document.body.dataset.open = "no"; renderCabinet(); if (selected) { $("result").innerHTML = `<div class="result"><h3>✓ พบเอกสาร</h3><b>${esc(selected.name)}</b><div style="margin:6px 0 9px;font-size:13px;color:#526579">ปี ${esc(selected.year)} · ${esc(selected.category)}</div>ตำแหน่งจัดเก็บ: <b>ช่อง ${esc(selected.location)}</b></div>`; $("kioskMessage").textContent = "พบเอกสาร · ช่อง " + selected.location; $("slotStatus").className = "status ok"; $("slotStatus").textContent = "ไฟแสดงตำแหน่งช่อง " + selected.location + " ติดแล้ว"; $("openBtn").disabled = false; } else { $("result").innerHTML = '<div class="status warn">ไม่พบเอกสารที่ตรงกับคำค้นหา ลองใช้ชื่อเอกสารหรือปี พ.ศ.</div>'; $("kioskMessage").textContent = "ไม่พบเอกสาร"; $("slotStatus").className = "status warn"; $("slotStatus").textContent = "ไม่พบตำแหน่งจัดเก็บ"; $("openBtn").disabled = true; } }
+        $("searchBtn").onclick = doSearch; $("query").addEventListener("keydown", e => { if (e.key === "Enter") doSearch(); });
+        $("voiceBtn").onclick = () => { const SR = window.SpeechRecognition || window.webkitSpeechRecognition; if (!SR) { $("voiceNote").className = "status warn"; $("voiceNote").textContent = "เบราว์เซอร์นี้ไม่รองรับการรู้จำเสียง แนะนำ Chrome หรือ Edge เวอร์ชันล่าสุด หรือพิมพ์คำค้นหาแทน"; return; } try { recognition = new SR(); recognition.lang = "th-TH"; recognition.interimResults = false; recognition.onstart = () => { $("voiceBtn").textContent = "🎙 กำลังฟัง…"; $("voiceNote").className = "status"; $("voiceNote").textContent = "กำลังฟัง กรุณาพูดชื่อเอกสาร"; }; recognition.onresult = e => { $("query").value = e.results[0][0].transcript; $("voiceNote").className = "status ok"; $("voiceNote").textContent = "ได้ยินว่า: " + e.results[0][0].transcript; doSearch(); }; recognition.onerror = e => { $("voiceNote").className = "status err"; $("voiceNote").textContent = "รับเสียงไม่สำเร็จ (" + e.error + "). ตรวจสอบสิทธิ์ไมโครโฟนหรือพิมพ์ค้นหาแทน"; }; recognition.onend = () => { $("voiceBtn").textContent = "🎙 เริ่มพูดค้นหา"; }; recognition.start(); } catch (e) { $("voiceNote").className = "status err"; $("voiceNote").textContent = "เปิดระบบเสียงไม่ได้ กรุณาตรวจสิทธิ์ไมโครโฟน"; } };
+        $("openBtn").onclick = () => { if (!selected) return; document.body.dataset.open = "yes"; renderCabinet(); $("slotStatus").className = "status ok"; $("slotStatus").textContent = "เปิดช่อง " + selected.location + " (จำลอง) แล้ว"; $("kioskMessage").textContent = "ช่อง " + selected.location + " เปิดแล้ว"; };
+        $("closeBtn").onclick = () => { document.body.dataset.open = "no"; renderCabinet(); $("slotStatus").className = "status"; $("slotStatus").textContent = "ปิดช่องเก็บเอกสารแล้ว"; if (selected) $("kioskMessage").textContent = "พบเอกสาร · ช่อง " + selected.location; };
+        $("scanBtn").onclick = () => { const btn = $("scanBtn"); btn.disabled = true; $("scanMessage").textContent = "กำลังรับเอกสารและสแกนข้อมูล…"; $("progressBar").style.width = "20%"; $("scanPreview").style.display = "none"; $("saveBtn").disabled = true; setTimeout(() => { $("progressBar").style.width = "55%"; $("scanMessage").textContent = "กำลังอ่านชื่อเอกสารและจัดประเภท…"; }, 400); setTimeout(() => { $("progressBar").style.width = "100%"; $("scanMessage").textContent = "สแกนจำลองสำเร็จ · ตรวจสอบข้อมูลก่อนบันทึก"; $("scanPreview").style.display = "block"; $("docName").value = $("docName").value.trim() || "แบบประเมินพัฒนาการเด็ก"; $("saveBtn").disabled = false; btn.disabled = false; $("saveStatus").className = "status ok"; $("saveStatus").textContent = "อ่านข้อมูลตัวอย่างแล้ว กรุณาตรวจสอบชื่อ ปี และช่องจัดเก็บก่อนบันทึก"; $("ledA").classList.add("on"); scanReady = true; }, 1000); };
+        $("saveBtn").onclick = () => { const name = $("docName").value.trim(), year = $("docYear").value.trim(); if (!scanReady) { $("saveStatus").className = "status warn"; $("saveStatus").textContent = "กรุณาเริ่มสแกนก่อนบันทึก"; return; } if (!name || !year) { $("saveStatus").className = "status warn"; $("saveStatus").textContent = "กรุณากรอกชื่อเอกสารและปี พ.ศ."; return; } records.unshift({ name, year, category: $("docCategory").value, location: $("docLocation").value, status: "จัดเก็บแล้ว" }); renderRecords(); $("saveStatus").className = "status ok"; $("saveStatus").textContent = "บันทึกข้อมูลสำเร็จ ไปที่หน้าค้นหาเพื่อทดลองค้นเอกสารนี้ได้"; $("scanMessage").textContent = "จัดเก็บข้อมูลแล้ว · พร้อมรับเอกสารชุดต่อไป"; $("docName").value = ""; $("progressBar").style.width = "0%"; $("scanPreview").style.display = "none"; $("saveBtn").disabled = true; scanReady = false; $("ledA").classList.remove("on"); };
+        $("resetBtn").onclick = () => { records = seed.map(x => ({ ...x })); selected = null; document.body.dataset.open = "no"; renderRecords(); renderCabinet(); $("result").innerHTML = '<div class="empty">พิมพ์คำค้นหาเพื่อเริ่มต้น</div>'; $("kioskMessage").textContent = "กรุณาค้นหาเอกสาร"; $("slotStatus").className = "status"; $("slotStatus").textContent = "ยังไม่ได้ระบุตำแหน่งเอกสาร"; $("openBtn").disabled = true; };
+        renderCabinet(); renderRecords(); doSearch();
+    </script>
+</body>
+
+</html>
